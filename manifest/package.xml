@@ -28,9 +28,19 @@
         <members>*</members>
         <name>LightningComponentBundle</name>
     </types>
+    <!-- 
     <types>
         <members>*</members>
         <name>StaticResource</name>
+    </types>
+    -->
+    <types>
+        <members>*</members>
+        <name>LightningComponentBundle</name>
+    </types> 
+    <types>
+        <members>*</members>
+        <name>LightningMessageChannel</name>
     </types>
     <version>56.0</version>
 </Package>
