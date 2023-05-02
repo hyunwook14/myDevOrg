@@ -11,11 +11,11 @@
                                 <svg class="slds-icon slds-icon_small" aria-hidden="true">
                                   <use xlink:href={targetIconURL}></use>
                                 </svg>
-                                <span class="slds-assistive-text">Account</span>
+                                <!-- <span class="slds-assistive-text">Account</span> -->
                               </span>
                               <button type="button" class="slds-input_faux slds-combobox__input slds-combobox__input-value" aria-labelledby="combobox-label-id-45 combobox-id-5-selected-value" id="combobox-id-5-selected-value" aria-controls="listbox-id-5" aria-expanded="false"
                                 aria-haspopup="listbox">
-                                <span class="slds-truncate pl15" id="combobox-value-id-20">Salesforce.com, Inc.</span>
+                                <span class="slds-truncate pl15" id="combobox-value-id-20">{selectedData.Name}</span>
                               </button>
                               <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right" title="Remove selected option" onclick={removeHandler}>
                                 <svg class="slds-button__icon" aria-hidden="true">
@@ -40,27 +40,49 @@
                     <div id="listbox-id-1" class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid"
                         role="listbox">
                         <ul class="slds-listbox slds-listbox_vertical" role="presentation">
-                            <li role="presentation" class="slds-listbox__item" onclick={selectHandler}>
-                                <div id="option1"
-                                    class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta"
-                                    role="option">
-                                    <span class="slds-media__figure slds-listbox__option-icon">
-                                        <span class="slds-icon_container slds-icon-standard-account">
-                                            <svg class="slds-icon slds-icon_small" aria-hidden="true">
-                                                <use xlink:href={targetIconURL}>
-                                                </use>
-                                            </svg>
+                            <template for:each={dataList} for:item="datum" for:index="index">
+                                <li key={datum.Id} role="presentation" class="slds-listbox__item" data-idx={index} onclick={selectHandler}>
+                                    <template if:true={isOptionShowListByOne}>
+                                    <div id="option1" class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
+                                            <span class="slds-media__figure slds-listbox__option-icon">
+                                                <span class="slds-icon_container slds-icon-standard-account">
+                                                    <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                                        <use xlink:href={targetIconURL}>
+                                                        </use>
+                                                    </svg>
+                                                </span>
+                                            </span>
+                                            <span class="slds-media__body">
+                                                <span class="slds-truncate">{datum.Name}</span>    
+                                            </span>
+                                            
+                                            
+                                    </div>
+                                    </template>
+                                    <template if:false={isOptionShowListByOne}>
+                                        <!-- TBD 동적으로 보여줄 항목추가-->
+                                    <div id="option2"
+                                        class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta"
+                                        role="option">
+                                        <span class="slds-media__figure slds-listbox__option-icon">
+                                            <span class="slds-icon_container slds-icon-standard-account">
+                                                <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                                    <use xlink:href={targetIconURL}>
+                                                    </use>
+                                                </svg>
+                                            </span>
                                         </span>
-                                    </span>
-                                    <span class="slds-media__body">
-                                        <span
-                                            class="slds-listbox__option-text slds-listbox__option-text_entity">Burlington
-                                            Textiles Corp of America</span>
-                                        <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">Account
-                                            • Burlington, NC</span>
-                                    </span>
-                                </div>
-                            </li>
+                                        <span class="slds-media__body">
+                                            
+                                                <span
+                                                    class="slds-listbox__option-text slds-listbox__option-text_entity">{datum.Name}</span>
+                                                <!-- <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">Account
+                                                    • Burlington, NC</span> -->
+                                                </span>
+                                            </div>
+                                        </template>
+                                        </li>
+                            </template>
                             
                         </ul>
                     </div>

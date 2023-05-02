@@ -6,11 +6,27 @@ const defualtUtilIconUrl = '/_slds/icons/utility-sprite/svg/symbols.svg#';
 
 export default class CustomLookUp extends LightningElement {
 
-    @api label = 'label';
-    isSelected     = true;
+    @api label                 = 'label';
+    isOptionShowListByOne      = false;
+    isSelected                 = false;
+    selectedData;
+    _displayName = 'Name';
+    dataList       = [{Name:'Burlington Textiles Corp of America',Id:'test'}];
     closeIconURL   = defualtUtilIconUrl+'close';
     _searchIconURL = defualtUtilIconUrl+'search';
     _targetIconURL = defualtStandardIconUrl +'account';
+
+    @api
+    get displayName() {
+        if(this._displayName.split(',').length > 1) this.isOptionShowListByOne = false;
+        else this.isOptionShowListByOne = true;
+
+        return this._displayName;
+    }
+
+    set displayName(value) {
+        this._displayName = value;
+    }
 
     @api
     get searchIconURL() {
@@ -40,6 +56,8 @@ export default class CustomLookUp extends LightningElement {
     }
 
     selectHandler(event) {
+        let idx = event.currentTarget.dataset.idx;
+        this.selectedData = this.dataList.slice()[idx];
         this.isSelected = true;
         this.blurHandler();
     }
