@@ -2,6 +2,19 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import LightningConfirm from 'lightning/confirm';
 import LightningAlert from 'lightning/alert';
 
+const defaultIconUrl ='/_slds/icons/{0}-sprite/svg/symbols.svg#';
+/** icon Info [s] */
+const doctype = 'doctype';
+const standard = 'standard';
+const utility = 'utility';
+const custom  = 'custom';
+const action = 'action';
+/** icon Info [e] */
+
+const getIconURL = (type) => {
+    return defaultIconUrl.replace(/(\{0\})/, type);
+};
+
 const utilAlert = async(label,theme, message) => {
     await LightningAlert.open({
         message: 'This is the alert message.',
@@ -31,4 +44,4 @@ const utilConfrim = async (label, message, variant) => {
     return result;
 }
 
-export {utilAlert, utilShowToast, utilConfrim};
+export {utilAlert, utilShowToast, utilConfrim, getIconURL};

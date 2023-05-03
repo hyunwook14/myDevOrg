@@ -1,20 +1,47 @@
 import { LightningElement, api, track } from 'lwc';
-import { utilAlert, utilShowToast, utilConfrim} from 'c/utils';
+import { utilAlert, utilShowToast, utilConfrim, getIconURL} from 'c/utils';
 
-const defualtStandardIconUrl = '/_slds/icons/standard-sprite/svg/symbols.svg#';
-const defualtUtilIconUrl = '/_slds/icons/utility-sprite/svg/symbols.svg#';
+//apex
+import getSearchData from '@salesforce/apex/CustomLookUpController.getSearchData';
 
 export default class CustomLookUp extends LightningElement {
 
     @api label                 = 'label';
+    @api sObjectApi            = 'User'; //test 용
+    @api fields                = 'Id,Name';
+    @api orderByClause         = ' order by CreatedDate ';
+    _whereClauseList           = [];
+    @api whereLogicalOperator  = '';
+    @api limitNum              = 100;
+
     isOptionShowListByOne      = false;
     isSelected                 = false;
     selectedData;
     _displayName = 'Name';
-    dataList       = [{Name:'Burlington Textiles Corp of America',Id:'test'}];
-    closeIconURL   = defualtUtilIconUrl+'close';
-    _searchIconURL = defualtUtilIconUrl+'search';
-    _targetIconURL = defualtStandardIconUrl +'account';
+    dataList       = [];
+    //{Name:'Burlington Textiles Corp of America',Id:'test'}
+    closeIconURL   = getIconURL('utility')+'close';
+    _searchIconURL = getIconURL('utility')+'search';
+    _targetIconURL = getIconURL('standard') +'account';
+    
+    _getSearchData(params) {
+        getSearchData({params:params}).then(result=>{
+            console.log(result);
+        }).catch(error=>{
+            console.error(error);
+        });
+    }
+
+    @api get whereClauseStr() {
+        return this._whereClauseList;
+    }
+    set whereClauseStr(value) {
+        this._whereClauseList = JSON.parse(JSON.stringify(value));
+    }
+
+    get isOptionDataList() {
+        return (this.dataList.length > 0);
+    }
 
     @api
     get displayName() {
@@ -34,7 +61,7 @@ export default class CustomLookUp extends LightningElement {
     }
 
     set searchIconURL(value) {
-        this._searchIconURL = defualtUtilIconUrl+value;
+        this._searchIconURL = getIconURL('utility')+value;
     }
 
     @api
@@ -43,7 +70,7 @@ export default class CustomLookUp extends LightningElement {
     }
 
     set targetIconURL(value) {
-        this._targetIconURL = defualtStandardIconUrl+value;
+        this._targetIconURL = getIconURL('standard')+value;
     }
 
     clickHandler(event) {
@@ -59,6 +86,12 @@ export default class CustomLookUp extends LightningElement {
         let idx = event.currentTarget.dataset.idx;
         this.selectedData = this.dataList.slice()[idx];
         this.isSelected = true;
+
+        // Creates the event with the contact ID data.
+        const selectedEvent = new CustomEvent('selected', { detail: this.selectedData});
+        // Dispatches the event.
+        this.dispatchEvent(selectedEvent);
+
         this.blurHandler();
     }
 
@@ -72,6 +105,15 @@ export default class CustomLookUp extends LightningElement {
         this.template.querySelector('.customLookupInput').classList.add('slds-has-focus');
         this.template.querySelector('.slds-dropdown-trigger_click').classList.add('slds-is-open');
         
+        let params = {};
+
+        if(this.sObjectApi) params.sObjectApi = this.sObjectApi;
+        if(this.fields) params.fields = this.fields;
+        if(this.orderByClause) params.orderByClause = this.orderByClause;
+        if(this._whereClauseList && this._whereClauseList.lenght > 0) params.whereClauseList = this._whereClauseList;
+        if(this.limitNum) params.limitNum = this.limitNum;
+
+        this._getSearchData(params);
     }
 
     blurHandler() {

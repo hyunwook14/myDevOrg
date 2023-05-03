@@ -40,6 +40,11 @@
                     <div id="listbox-id-1" class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid"
                         role="listbox">
                         <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                            <template if:false={isOptionDataList}>
+                                <li class="noData"> No Data.. </li>
+                            </template>
+                            <!-- <template if:true={isOptionDataList}>
+                            </template> -->
                             <template for:each={dataList} for:item="datum" for:index="index">
                                 <li key={datum.Id} role="presentation" class="slds-listbox__item" data-idx={index} onclick={selectHandler}>
                                     <template if:true={isOptionShowListByOne}>
