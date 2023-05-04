@@ -5,32 +5,28 @@ import { utilAlert, utilShowToast, utilConfrim, getIconURL} from 'c/utils';
 import getSearchData from '@salesforce/apex/CustomLookUpController.getSearchData';
 
 export default class CustomLookUp extends LightningElement {
+    //tbd required 표시 및 help Text 추가
 
     @api label                 = 'label';
-    @api sObjectApi            = 'User'; //test 용
+    @api sObjectApi            = 'Account'; //test 용
+    @api searchField           = 'Name';
     @api fields                = 'Id,Name';
     @api orderByClause         = ' order by CreatedDate ';
+    @api targetIconType        = 'standard';
     _whereClauseList           = [];
     @api whereLogicalOperator  = '';
     @api limitNum              = 100;
 
     isOptionShowListByOne      = false;
     isSelected                 = false;
+    isSearchLoading            = false;
     selectedData;
     _displayName = 'Name';
     dataList       = [];
-    //{Name:'Burlington Textiles Corp of America',Id:'test'}
     closeIconURL   = getIconURL('utility')+'close';
     _searchIconURL = getIconURL('utility')+'search';
-    _targetIconURL = getIconURL('standard') +'account';
+    _targetIconURL = getIconURL('standard')+'account';
     
-    _getSearchData(params) {
-        getSearchData({params:params}).then(result=>{
-            console.log(result);
-        }).catch(error=>{
-            console.error(error);
-        });
-    }
 
     @api get whereClauseStr() {
         return this._whereClauseList;
@@ -45,8 +41,8 @@ export default class CustomLookUp extends LightningElement {
 
     @api
     get displayName() {
-        if(this._displayName.split(',').length > 1) this.isOptionShowListByOne = false;
-        else this.isOptionShowListByOne = true;
+        if(this._displayName.split(',').length > 1) this.isOptionShowListByOne = true;
+        else this.isOptionShowListByOne = false;
 
         return this._displayName;
     }
@@ -70,7 +66,35 @@ export default class CustomLookUp extends LightningElement {
     }
 
     set targetIconURL(value) {
-        this._targetIconURL = getIconURL('standard')+value;
+        this._targetIconURL = getIconURL(this.targetIconType)+value;
+    }
+
+    _getSearchData(params) {
+        this.isSearchLoading = true;
+        getSearchData({params:params}).then(result=>{
+            console.log(result);
+            this.dataList = result.data;
+
+        }).catch(error=>{
+            console.error(error);
+        }).finally(()=>{
+            this.isSearchLoading = false;
+        });
+    }
+
+    inputHandler(event) {
+
+        let params = {searchField:this.searchText};
+        let searchText = event.currentTarget.value;
+        if(searchText) params.searchText = searchText;
+        if(this.sObjectApi) params.sObjectApi = this.sObjectApi;
+        if(this.fields) params.fields = this.fields;
+        if(this.orderByClause) params.orderByClause = this.orderByClause;
+        if(this._whereClauseList && this._whereClauseList.lenght > 0) params.whereClauseList = this._whereClauseList;
+        if(this.limitNum) params.limitNum = this.limitNum;
+       
+
+        this._getSearchData(params);
     }
 
     clickHandler(event) {
@@ -105,15 +129,17 @@ export default class CustomLookUp extends LightningElement {
         this.template.querySelector('.customLookupInput').classList.add('slds-has-focus');
         this.template.querySelector('.slds-dropdown-trigger_click').classList.add('slds-is-open');
         
-        let params = {};
+        let params = {searchField:this.searchText};
+        let searchText = this.template.querySelector('.customLookupInput').value;
 
+        if(searchText) params.searchText = searchText;
         if(this.sObjectApi) params.sObjectApi = this.sObjectApi;
         if(this.fields) params.fields = this.fields;
         if(this.orderByClause) params.orderByClause = this.orderByClause;
         if(this._whereClauseList && this._whereClauseList.lenght > 0) params.whereClauseList = this._whereClauseList;
         if(this.limitNum) params.limitNum = this.limitNum;
-
-        this._getSearchData(params);
+       
+        if(!searchText) this._getSearchData(params);
     }
 
     blurHandler() {
