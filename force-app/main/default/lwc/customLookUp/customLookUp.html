@@ -1,13 +1,16 @@
 <template>
+    <!-- TBD 선택된 상태에서 remove 버튼 클릭 모달 띄우거나 confirm 으로 Option으로 넣는거 -->
     <div class="slds-form-element" onfocusin={focusInHandler} onfocusout={focusOutHandler}>
-        <label class="slds-form-element__label" for="combobox-id-1" id="combobox-label-id-40">{label}</label>
+        <label class="slds-form-element__label" for="combobox-id-1" id="combobox-label-id-40">
+            <abbr lwc:if={isRequired} class="slds-required" title="required">*</abbr> {label}
+        </label>
         <div class="slds-form-element__control">
             <div class="slds-combobox_container">
                 <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click">
                     
                     <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
                         <template if:true={isSelected}>
-                            <span class="slds-icon_container slds-combobox__input-entity-icon" >
+                            <span class="slds-icon_container slds-combobox__input-entity-icon target-icon_container" >
                                 <!-- slds-icon-standard-account -->
                                 <svg class="slds-icon slds-icon_small" aria-hidden="true">
                                   <use xlink:href={targetIconURL}></use>
@@ -16,7 +19,7 @@
                               </span>
                               <button type="button" class="slds-input_faux slds-combobox__input slds-combobox__input-value" aria-labelledby="combobox-label-id-45 combobox-id-5-selected-value" id="combobox-id-5-selected-value" aria-controls="listbox-id-5" aria-expanded="false"
                                 aria-haspopup="listbox">
-                                <span class="slds-truncate pl15" id="combobox-value-id-20">{selectedData.Name}</span>
+                                <span class="slds-truncate pl15" id="combobox-value-id-20">{selectedDisplayInfo}</span>
                               </button>
                               <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right" title="Remove selected option" onclick={removeHandler}>
                                 <svg class="slds-button__icon" aria-hidden="true">
@@ -58,7 +61,7 @@
                                     <template if:true={isOptionShowListByOne}>
                                     <div id="option1" class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
                                             <span class="slds-media__figure slds-listbox__option-icon">
-                                                <span class="slds-icon_container ">
+                                                <span class="slds-icon_container target-icon_container">
                                                     <!-- slds-icon-standard-account -->
                                                     <svg class="slds-icon slds-icon_small" aria-hidden="true">
                                                         <use xlink:href={targetIconURL}>
@@ -70,31 +73,31 @@
                                                 <span class="slds-truncate">{datum.Name}</span>    
                                             </span>
                                             
-                                            
                                     </div>
                                     </template>
                                     <template if:false={isOptionShowListByOne}>
                                         <!-- TBD 동적으로 보여줄 항목추가-->
-                                    <div id="option2"
-                                        class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta"
-                                        role="option">
-                                        <span class="slds-media__figure slds-listbox__option-icon">
-                                            <span class="slds-icon_container ">
-                                                <!-- slds-icon-standard-account -->
-                                                <svg class="slds-icon slds-icon_small" aria-hidden="true">
-                                                    <use xlink:href={targetIconURL}>
-                                                    </use>
-                                                </svg>
-                                            </span>
-                                        </span>
-                                        <span class="slds-media__body">
-                                            
-                                                <span
-                                                    class="slds-listbox__option-text slds-listbox__option-text_entity">{datum.Name}</span>
-                                                <!-- <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">Account
-                                                    • Burlington, NC</span> -->
+                                        <div id="option2"
+                                            class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta"
+                                            role="option">
+                                            <span class="slds-media__figure slds-listbox__option-icon iconCenter">
+                                                <span class="slds-icon_container target-icon_container">
+                                                    <!-- slds-icon-standard-account -->
+                                                    <svg class="slds-icon slds-icon_small" aria-hidden="true">
+                                                        <use xlink:href={targetIconURL}>
+                                                        </use>
+                                                    </svg>
                                                 </span>
-                                            </div>
+                                            </span>
+                                            <span class="slds-media__body">
+                                                    <c-custom-look-up-option datum={datum} display-name={displayName}>
+                                                    </c-custom-look-up-option>
+                                                    <!-- <span
+                                                        class="slds-listbox__option-text slds-listbox__option-text_entity">{datum.Name}</span> -->
+                                                    <!-- <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">Account
+                                                        • Burlington, NC</span> -->
+                                            </span>
+                                        </div>
                                         </template>
                                         </li>
                             </template>

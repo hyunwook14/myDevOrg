@@ -5,19 +5,20 @@ import { utilAlert, utilShowToast, utilConfrim, getIconURL} from 'c/utils';
 import getSearchData from '@salesforce/apex/CustomLookUpController.getSearchData';
 
 export default class CustomLookUp extends LightningElement {
-    //tbd required 표시 및 help Text 추가
-
-    @api label                 = 'label';
-    @api sObjectApi            = 'Account'; //test 용
+    //TBD help Text 추가 , Disabled
+    @api isRequired            = false;
+    @api isDisabled            = false;
+    @api label                 = '';
+    @api sObjectApi            = ''; //test 용
     @api searchField           = 'Name';
     @api fields                = 'Id,Name';
     @api orderByClause         = ' order by CreatedDate ';
-    @api targetIconType        = 'standard';
-    _whereClauseList           = [];
     @api whereLogicalOperator  = '';
     @api limitNum              = 100;
+    _whereClauseList           = [];
+    selectedDisplayInfo        ='';
 
-    isOptionShowListByOne      = false;
+    isOptionShowListByOne      = true;
     isSelected                 = false;
     isSearchLoading            = false;
     selectedData;
@@ -41,14 +42,15 @@ export default class CustomLookUp extends LightningElement {
 
     @api
     get displayName() {
-        if(this._displayName.split(',').length > 1) this.isOptionShowListByOne = true;
-        else this.isOptionShowListByOne = false;
+        if(this._displayName.split(',').length > 1) this.isOptionShowListByOne = false;
+        else this.isOptionShowListByOne = true;
 
         return this._displayName;
     }
 
     set displayName(value) {
         this._displayName = value;
+        this.displayName;
     }
 
     @api
@@ -66,7 +68,16 @@ export default class CustomLookUp extends LightningElement {
     }
 
     set targetIconURL(value) {
-        this._targetIconURL = getIconURL(this.targetIconType)+value;
+        let iconInfoList = value.split(',');
+        this._iconInfoList = iconInfoList;
+
+        if(iconInfoList.length > 1) {
+            this._targetIconURL = getIconURL(iconInfoList[0])+iconInfoList[1];
+        }
+        else {
+            this._targetIconURL = getIconURL('standard')+value;
+        }
+
     }
 
     _getSearchData(params) {
@@ -88,7 +99,7 @@ export default class CustomLookUp extends LightningElement {
         let searchText = event.currentTarget.value;
         if(searchText) params.searchText = searchText;
         if(this.sObjectApi) params.sObjectApi = this.sObjectApi;
-        if(this.fields) params.fields = this.fields;
+        if(this.fields) params.fields = this.fields.toLowerCase();
         if(this.orderByClause) params.orderByClause = this.orderByClause;
         if(this._whereClauseList && this._whereClauseList.lenght > 0) params.whereClauseList = this._whereClauseList;
         if(this.limitNum) params.limitNum = this.limitNum;
@@ -98,7 +109,7 @@ export default class CustomLookUp extends LightningElement {
     }
 
     clickHandler(event) {
-        console.log('click!!')
+        //console.log('click!!')
         this.focusHandler();
     }
 
@@ -110,6 +121,13 @@ export default class CustomLookUp extends LightningElement {
         let idx = event.currentTarget.dataset.idx;
         this.selectedData = this.dataList.slice()[idx];
         this.isSelected = true;
+
+        let displayNameList = this._displayName.split(',');
+
+        for(let field in this.selectedData) {
+            if(field.toLowerCase() === displayNameList[0].toLowerCase())
+            this.selectedDisplayInfo = this.selectedData[field];
+        }
 
         // Creates the event with the contact ID data.
         const selectedEvent = new CustomEvent('selected', { detail: this.selectedData});
@@ -134,7 +152,7 @@ export default class CustomLookUp extends LightningElement {
 
         if(searchText) params.searchText = searchText;
         if(this.sObjectApi) params.sObjectApi = this.sObjectApi;
-        if(this.fields) params.fields = this.fields;
+        if(this.fields) params.fields = this.fields.toLowerCase();
         if(this.orderByClause) params.orderByClause = this.orderByClause;
         if(this._whereClauseList && this._whereClauseList.lenght > 0) params.whereClauseList = this._whereClauseList;
         if(this.limitNum) params.limitNum = this.limitNum;
@@ -174,5 +192,19 @@ export default class CustomLookUp extends LightningElement {
             e.stopPropagation();
             this.customClick();
         });
+    }
+
+    renderedCallback() {
+        let targetIconContainers = this.template.querySelectorAll('.target-icon_container')
+
+        if(this._iconInfoList && this._iconInfoList.length > 1 ) {
+            for(let targetIconContainer of targetIconContainers) {   
+                targetIconContainer.classList.add('slds-icon-'+this._iconInfoList[0]+'-'+this._iconInfoList[1])
+            }
+        }else {
+            for(let targetIconContainer of targetIconContainers) {   
+                targetIconContainer.classList.add('slds-icon-standard-'+this._iconInfoList[0])
+            }
+        }
     }
 }

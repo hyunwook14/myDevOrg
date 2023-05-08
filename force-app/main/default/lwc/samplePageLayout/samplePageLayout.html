@@ -13,25 +13,65 @@
                     <c-custom-look-up
                         s-object-api="User"
                         label="User"
-                        target-icon-type="standard"
-                        target-icon-u-r-l="account"
+                        target-icon-u-r-l="custom,custom111"
+                        display-name="email,id,name"
+                        fields="name,email,id"
+                        is-required
                     >
                     </c-custom-look-up>
                 </div>
             </div>
             <div>
-                <p>
-                    example
-                </p>
-                <p class="preline">
-                    &lt;c-custom-look-up
-                    s-object-api="User"
-                    label="User"
-                    target-icon-u-r-l="gpres"
-                    target-icon-type="doctype"
-                    &gt;
-                    &lt;/c-custom-look-up&gt;
-                </p>
+
+                <div class="slds-tabs_scoped">
+                    <ul class="slds-tabs_scoped__nav" role="tablist">
+                      <li class="slds-tabs_scoped__item slds-is-active" title="Item One" role="presentation">
+                        <a class="slds-tabs_scoped__link" onclick={clickHandler} href="#" role="tab" tabindex="0" aria-selected="true" aria-controls="tab-scoped-1" id="tab-scoped-1__item">Example</a>
+                      </li>
+                      <li class="slds-tabs_scoped__item" title="Item Two" role="presentation">
+                        <a class="slds-tabs_scoped__link" onclick={clickHandler} href="#" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-scoped-2" id="tab-scoped-2__item">Description</a>
+                      </li>
+                    </ul>
+                    <div id="tab-scoped-1" class="slds-tabs_scoped__content slds-show" role="tabpanel" aria-labelledby="tab-scoped-1__item">
+                        <p class="preline">
+                            &lt;c-custom-look-up
+                            <br>s-object-api="User"
+                            <br>label="User"
+                            
+                            <br>target-icon-u-r-l="custom,custom111"
+                            <!-- <br>target-icon-u-r-l="doctype,gpres" -->
+                            <br>display-name="email,id,name"
+                            <br>is-required
+                            &gt;
+                            &lt;/c-custom-look-up&gt;
+                        </p>
+                    </div>
+                    <div id="tab-scoped-2" class="slds-tabs_scoped__content slds-hide" role="tabpanel" aria-labelledby="tab-scoped-2__item">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Attribute</th>
+                                    <th>isRequried</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={customLookupInfo} for:item="info">
+                                    <tr key={info.attribute}>
+                                        <td>{info.attribute}</td>
+                                        <td>{info.isRequired}</td>
+                                        <td>{info.desc}</td>
+                                    </tr>
+
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                  </div>
+
+                
+                
             </div>
         </div>
     </section>
