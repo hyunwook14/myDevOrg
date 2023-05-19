@@ -1,0 +1,14 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:hasRecordId,lightning:actionOverride,force:hasSObjectName,lightning:isUrlAddressable">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.pageReference}" action="{!c.onPageReferenceChange}"/>
+    <aura:attribute name="isShow" type="Boolean" default="true" />
+
+    <P> lightning:hasPageReference 제거</P>
+
+    <button onclick="{!c.handleClick}"> lwc 보이기/숨기기</button>
+    <aura:if isTrue="{!v.isShow}">
+        <c:samplePageLayout></c:samplePageLayout>
+    </aura:if>
+    
+</aura:component>	

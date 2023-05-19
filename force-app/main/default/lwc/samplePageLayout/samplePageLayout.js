@@ -1,5 +1,21 @@
 import { LightningElement } from 'lwc';
 
+const events = ["pagehide", "pageshow", "unload", "load"];
+
+const eventLogger = (event) => {
+  switch (event.type) {
+    case "pagehide":
+    case "pageshow": {
+      let isPersisted = event.persisted ? "persisted" : "not persisted";
+      console.log(`Event: ${event.type} - ${isPersisted}`);
+      break;
+    }
+    default:
+      console.log(`Event: ${event.type}`);
+      break;
+  }
+};
+
 export default class SamplePageLayout extends LightningElement {
 
     customLookupInfo = [
@@ -24,5 +40,35 @@ export default class SamplePageLayout extends LightningElement {
         let targetCmp = event.currentTarget;
         targetCmp.tabindex = 0;
         targetCmp.setAttribute('aria-selected', true)
+    }
+
+    _setOnPopStateHandler() {
+        console.log('_setOnPopStateHandler');
+        window.onpopstate = (ev) => {
+            console.log(ev);
+            alert(
+                `location: ${document.location}, state: ${JSON.stringify(ev.state)}`
+              );
+            // get the state for the history entry the user is going to be on
+            const state = ev.state;
+            if(state && state.pageNumber) {
+                this.pageNumber = state.pageNumber;
+            }
+        };
+    }
+
+    constructor() {
+        super();
+        //this._setOnPopStateHandler.call(this);
+        //this._setOnPopStateHandler();
+        events.forEach((eventName) => window.addEventListener(eventName, eventLogger));
+    }
+
+    connectedCallback() {
+        console.log('init');
+    }
+
+    disconnectedCallback() {
+        console.log('component remove');
     }
 }

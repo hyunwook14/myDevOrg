@@ -161,8 +161,8 @@ export default class CustomLookUp extends LightningElement {
     }
 
     blurHandler() {
-        this.template.querySelector('.customLookupInput').classList.remove('slds-has-focus');
-        this.template.querySelector('.slds-dropdown-trigger_click').classList.remove('slds-is-open');
+        if(this.template.querySelector('.customLookupInput')) this.template.querySelector('.customLookupInput').classList.remove('slds-has-focus');
+        if(this.template.querySelector('.slds-dropdown-trigger_click'))  this.template.querySelector('.slds-dropdown-trigger_click').classList.remove('slds-is-open');
     }
 
     focusInHandler(event) {
@@ -173,25 +173,22 @@ export default class CustomLookUp extends LightningElement {
         this._IsFocus = false;
     }
 
-    customClick() {
+    customClick(event) {
         console.log('cusotm Click!!');
+        //event.stopPropagation(); 버블링을 막음 사용 x
         if(!this._IsFocus) {
             this.blurHandler();
         }
     }
 
     connectedCallback() {
-        document.addEventListener('click', (e)=>{
-            e.stopPropagation();
-            this.customClick();
-        });
+        this._customClick = this.customClick.bind(this);
+        document.addEventListener('click', this._customClick); // option : true 캡쳐링단계 false 버블링단계
     }
 
     disconnectedCallback() {
-        document.removeEventListener('click', (e)=>{
-            e.stopPropagation();
-            this.customClick();
-        });
+        console.log('cusotm Lookup disconnectdCallback')
+        document.removeEventListener('click', this._customClick);
     }
 
     renderedCallback() {
