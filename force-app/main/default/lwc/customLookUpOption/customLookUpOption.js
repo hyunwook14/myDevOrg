@@ -14,7 +14,5 @@ export default class CustomLookUpOption extends LightningElement {
                 this._displayNameList.push(this.datum[field]);
             }
         });
-
-        console.log(this._displayNameList);
     }
 }

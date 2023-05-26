@@ -4,6 +4,18 @@
     grid-gap: 10px;
     grid-auto-rows: minmax(100px, auto);
 }
-.preline{
+.preline {
     white-space: pre-line;
+}
+
+table, td, th {
+    border:2px solid var(--slds-g-color-border-base-4, var(--lwc-colorBorderButtonDefault,rgb(201, 201, 201)));
+    
+}
+th, td {
+    padding:1rem;
+}
+
+ul, li{
+    list-style:none;
 }

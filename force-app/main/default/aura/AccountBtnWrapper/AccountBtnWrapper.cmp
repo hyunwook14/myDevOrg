@@ -11,4 +11,4 @@
         <c:samplePageLayout></c:samplePageLayout>
     </aura:if>
     
-</aura:component>	
+</aura:component>

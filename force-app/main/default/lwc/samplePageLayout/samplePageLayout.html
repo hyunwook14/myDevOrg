@@ -1,79 +1,133 @@
 <template>
     
     <header>
-        <h2>Custom Component Sample Page</h2>
+        <!-- <h2 class="slds-text-heading_medium">Custom Component Guide</h2> -->
     </header>
     <section>
-        <div class="grid">
-            <div>
-                <div>
-                    Custom Lookup
-                </div>
-                <div>
-                    <c-custom-look-up
-                        s-object-api="User"
-                        label="User"
-                        target-icon-u-r-l="custom,custom111"
-                        display-name="email,id,name"
-                        fields="name,email,id"
-                        is-required
-                    >
-                    </c-custom-look-up>
-                </div>
-            </div>
-            <div>
-
-                <div class="slds-tabs_scoped">
-                    <ul class="slds-tabs_scoped__nav" role="tablist">
-                      <li class="slds-tabs_scoped__item slds-is-active" title="Item One" role="presentation">
-                        <a class="slds-tabs_scoped__link" onclick={clickHandler} href="#" role="tab" tabindex="0" aria-selected="true" aria-controls="tab-scoped-1" id="tab-scoped-1__item">Example</a>
-                      </li>
-                      <li class="slds-tabs_scoped__item" title="Item Two" role="presentation">
-                        <a class="slds-tabs_scoped__link" onclick={clickHandler} href="#" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-scoped-2" id="tab-scoped-2__item">Description</a>
-                      </li>
-                    </ul>
-                    <div id="tab-scoped-1" class="slds-tabs_scoped__content slds-show" role="tabpanel" aria-labelledby="tab-scoped-1__item">
-                        <p class="preline">
-                            &lt;c-custom-look-up
-                            <br>s-object-api="User"
-                            <br>label="User"
-                            
-                            <br>target-icon-u-r-l="custom,custom111"
-                            <!-- <br>target-icon-u-r-l="doctype,gpres" -->
-                            <br>display-name="email,id,name"
-                            <br>is-required
-                            &gt;
-                            &lt;/c-custom-look-up&gt;
-                        </p>
+        <div class="slds-vertical-tabs">
+            <ul class="slds-vertical-tabs__nav" role="tablist" aria-orientation="vertical">
+              <li class="slds-vertical-tabs__nav-item slds-is-active" title="Tab 1" role="presentation">
+                <a class="slds-vertical-tabs__link" href="#" role="tab" tabindex="0" aria-selected="true" aria-controls="slds-vertical-tabs-0" id="slds-vertical-tabs-0__nav">
+                  <span class="slds-vertical-tabs__left-icon"></span>
+                  <span class="slds-truncate" title="Tab 1">CustomLookup</span>
+                  <span class="slds-vertical-tabs__right-icon"></span>
+                </a>
+              </li>
+              <li class="slds-vertical-tabs__nav-item " title="Tab 2" role="presentation">
+                <a class="slds-vertical-tabs__link" href="#" role="tab" tabindex="-1" aria-selected="false" aria-controls="slds-vertical-tabs-1" id="slds-vertical-tabs-1__nav">
+                  <span class="slds-vertical-tabs__left-icon"></span>
+                  <span class="slds-truncate" title="Tab 2">Data Loader</span>
+                  <span class="slds-vertical-tabs__right-icon"></span>
+                </a>
+              </li>
+            </ul>
+            <div class="slds-vertical-tabs__content slds-show" id="slds-vertical-tabs-0" role="tabpanel" aria-labelledby="slds-vertical-tabs-0__nav">
+              <div class="">
+                <!-- slds-text-longform -->
+                <h3 class="slds-text-heading_medium">CustomLookup</h3>
+                <div class="grid">
+                    <div>
+                        <div>
+                        </div>
+                        <div>
+                            <c-custom-look-up
+                                s-object-api="User"
+                                label="User"
+                                target-icon-u-r-l="custom,custom111"
+                                display-name="email,id,name"
+                                fields="name,email,id"
+                                is-required
+                            >
+                            </c-custom-look-up>
+                        </div>
                     </div>
-                    <div id="tab-scoped-2" class="slds-tabs_scoped__content slds-hide" role="tabpanel" aria-labelledby="tab-scoped-2__item">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Attribute</th>
-                                    <th>isRequried</th>
-                                    <th>Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <template for:each={customLookupInfo} for:item="info">
-                                    <tr key={info.attribute}>
-                                        <td>{info.attribute}</td>
-                                        <td>{info.isRequired}</td>
-                                        <td>{info.desc}</td>
-                                    </tr>
+                    <div>
+        
+                        <div class="slds-tabs_scoped">
+                            <ul class="slds-tabs_scoped__nav" role="tablist">
+                              <li class="slds-tabs_scoped__item slds-is-active" title="Item One" role="presentation">
+                                <a class="slds-tabs_scoped__link" onclick={clickHandler} href="#" role="tab" tabindex="0" aria-selected="true" aria-controls="tab-scoped-1" id="tab-scoped-1__item">Example</a>
+                              </li>
+                              <li class="slds-tabs_scoped__item" title="Item Two" role="presentation">
+                                <a class="slds-tabs_scoped__link" onclick={clickHandler} href="#" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-scoped-2" id="tab-scoped-2__item">Attribute</a>
+                              </li>
+                              <li class="slds-tabs_scoped__item" title="Item Three" role="presentation">
+                                <a class="slds-tabs_scoped__link" onclick={clickHandler} href="#" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-scoped-3" id="tab-scoped-3__item">Method</a>
+                              </li>
+                            </ul>
+                            <div id="tab-scoped-1" class="slds-tabs_scoped__content slds-show" role="tabpanel" aria-labelledby="tab-scoped-1__item">
+                                <p class="preline">
+                                    &lt;c-custom-look-up
+                                    <br>s-object-api="User"
+                                    <br>label="User"
+                                    
+                                    <br>target-icon-u-r-l="custom,custom111"
+                                    <!-- <br>target-icon-u-r-l="doctype,gpres" -->
+                                    <br>display-name="email,id,name"
+                                    <br>is-required
+                                    &gt;
+                                    &lt;/c-custom-look-up&gt;
+                                </p>
+                            </div>
+                            <div id="tab-scoped-2" class="slds-tabs_scoped__content slds-hide" role="tabpanel" aria-labelledby="tab-scoped-2__item">
+                                <table class="">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-resize">Attribute</th>
+                                            <th class="col-resize">isRequried</th>
+                                            <th class="col-resize">Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <template for:each={customLookupInfo} for:item="info">
+                                            <tr key={info.attribute}>
+                                                <td>{info.attribute}</td>
+                                                <td>{info.isRequired}</td>
+                                                <td>{info.desc}</td>
+                                            </tr>
+        
+                                        </template>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="tab-scoped-3" class="slds-tabs_scoped__content slds-hide" role="tabpanel" aria-labelledby="tab-scoped-3__item">
 
-                                </template>
-                            </tbody>
-                        </table>
+                            </div>
+                          </div>
+        
+                        
+                        
                     </div>
-                    
-                  </div>
-
-                
-                
+                </div>
+              </div>
             </div>
-        </div>
+            <div class="slds-vertical-tabs__content slds-hide" id="slds-vertical-tabs-1" role="tabpanel" aria-labelledby="slds-vertical-tabs-1__nav">
+              <div class="slds-text-longform">
+
+                <h3 class="slds-text-heading_medium">Data Loader by Modal</h3>
+                <button class="slds-button slds-button_neutral" onclick={handleModalClick}>Show Modal</button>
+
+                <div>
+                    <lightning-input 
+                        type="file"
+                        label="Attachment"
+                        accept={acceptedFormats}
+                        onchange={handleFilesChange}
+                    ></lightning-input>
+                </div>
+              </div>
+            </div>
+            <div class="slds-vertical-tabs__content slds-hide" id="slds-vertical-tabs-2" role="tabpanel" aria-labelledby="slds-vertical-tabs-2__nav">
+              <div class="slds-text-longform">
+                <h3 class="slds-text-heading_medium">Tab Title</h3>
+                <p>Content for Tab 1</p>
+                <p>Lorem ipsum dolor...</p>
+                <p>Lorem ipsum dolor...</p>
+              </div>
+            </div>
+          </div>
+
+        
     </section>
 
 </template>

@@ -1,0 +1,20 @@
+<template>
+    <lightning-modal-header label="My Modal Heading"></lightning-modal-header>
+    <lightning-modal-body> 
+        
+        <div>
+            {version}
+
+            <lightning-input 
+                type="file"
+                label="Attachment"
+                accept={acceptedFormats}
+                onchange={handleFilesChange}
+            ></lightning-input>
+        </div>
+
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button label="OK" onclick={handleOkay}></lightning-button>
+    </lightning-modal-footer>
+</template>

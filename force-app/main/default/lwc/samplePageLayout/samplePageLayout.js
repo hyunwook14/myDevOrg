@@ -1,4 +1,7 @@
 import { LightningElement } from 'lwc';
+import dataLoaderModal from 'c/dataLoaderModal';
+import { loadScript } from 'lightning/platformResourceLoader';
+import sheetjs from '@salesforce/resourceUrl/sheetjs';
 
 const events = ["pagehide", "pageshow", "unload", "load"];
 
@@ -15,6 +18,7 @@ const eventLogger = (event) => {
       break;
   }
 };
+let XLS = {};
 
 export default class SamplePageLayout extends LightningElement {
 
@@ -32,14 +36,77 @@ export default class SamplePageLayout extends LightningElement {
         {attribute:'displayName          ', isRequired:'false', desc:'검색시 Option에 노출할 필드 정보로 2개 이상일 경우 강제적으로 css 수정이 필요, defulat:Name, value:Name,Id/등...'},
         {attribute:'targetIconURL        ', isRequired:'false', desc:'검색 및 선택된 Option 에 나타나는 Icon 정보, default:account, '},
         
-    ]
+    ];
+
+    isInit = false;
+
+    async handleFilesChange(event) {
+        // Get the list of uploaded files
+        console.log('?');
+        const uploadedFiles = event.detail.files;
+        const data = await uploadedFiles[0].arrayBuffer();
+        /* data is an ArrayBuffer */
+        const workbook = XLS.read(data);
+        /* do something with the workbook here */
+        console.log(workbook);
+        workbook.SheetNames.forEach(sheetName => {
+            console.log(XLS.utils.sheet_to_json(workbook.Sheets[sheetName]));
+            console.log(XLS.utils.sheet_to_json(workbook.Sheets[sheetName],{header:1})[0]);
+        });
+        // workbook.SheetNames.forEach(sheetName => {
+            
+        //     console.log(XLS.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]));
+        // });
+        
+    }
+
+    async handleModalClick() {
+        console.log('modalShow!');
+        const result = await dataLoaderModal.open({
+            // `label` is not included here in this example.
+            // it is set on lightning-modal-header instead
+            size: 'large',
+            description: 'Accessible description of modal\'s purpose',
+            content: 'Passed into content api',
+        });
+        // if modal closed with X button, promise returns result = 'undefined'
+        // if modal closed with OK button, promise returns result = 'okay'
+        console.log(result);
+    }
 
     clickHandler(event) {
         console.log(event.currentTarget);
         let tabsCmps = this.template.querySelectorAll('.slds-tabs_scoped__item');
+        for(let tabCm of tabsCmps) {
+            tabCm.classList.remove('slds-is-active');
+        }
+
+        let liCmps = this.template.querySelectorAll('.slds-tabs_scoped__item');
+        for(let liCmp of liCmps) {
+            liCmp.tabIndex = -1;
+            liCmp.setAttribute('aria-selected', false);
+        }
+
         let targetCmp = event.currentTarget;
         targetCmp.tabindex = 0;
-        targetCmp.setAttribute('aria-selected', true)
+        targetCmp.setAttribute('aria-selected', true);
+        targetCmp.parentElement.classList.add('slds-is-active');
+        // let targetParentCmp = event.target;
+        // targetParentCmp.classList.add('slds-is-active');
+
+        let selectedControl = targetCmp.getAttribute('aria-controls');
+
+        let tabContents = this.template.querySelectorAll('.slds-tabs_scoped__content');
+        for(let tabContent of tabContents) {
+            tabContent.classList.remove('slds-active');
+            tabContent.classList.remove('slds-hide');
+
+            if(selectedControl == tabContent.id) {
+                tabContent.classList.add("slds-active");
+            }else {
+                tabContent.classList.add('slds-hide');
+            }
+        }
     }
 
     _setOnPopStateHandler() {
@@ -61,14 +128,61 @@ export default class SamplePageLayout extends LightningElement {
         super();
         //this._setOnPopStateHandler.call(this);
         //this._setOnPopStateHandler();
-        events.forEach((eventName) => window.addEventListener(eventName, eventLogger));
+        //events.forEach((eventName) => window.addEventListener(eventName, eventLogger));
     }
 
-    connectedCallback() {
+    async connectedCallback() {
         console.log('init');
+
+        await loadScript(this, sheetjs); // load the library
+        // At this point, the library is accessible with the `XLSX` variable
+        //console.log(XLSX);
+        XLS = XLSX;
+
+        this.template.addEventListener('mouseup', (event)=>{
+            console.log('samplePageLayout.js mouseup');
+            console.log('event');
+            console.log(event);
+            //let now_mouseup = widnow.event.srcElement
+            //console.log(now_mouseup.className);
+        });
     }
 
     disconnectedCallback() {
         console.log('component remove');
+    }
+
+    renderedCallback() {
+        if(!this.isInit) {
+            this.isInit = true;
+
+            let targetAList= this.template.querySelectorAll('.slds-vertical-tabs__link');
+            let navList = this.template.querySelectorAll('.slds-vertical-tabs__nav-item');
+            let targetContentList = this.template.querySelectorAll('.slds-vertical-tabs__content');
+            for(let targetA of targetAList) {
+                targetA.addEventListener('click', (event)=>{
+                    
+                    for(let nav of navList) {
+                        nav.classList.remove('slds-is-active');
+                    }
+
+                    let targetCmp = event.currentTarget;
+                    targetCmp.parentElement.classList.add('slds-is-active');
+                    let selectedControl = targetCmp.getAttribute('aria-controls');
+
+                    for(let targetContent of targetContentList) {
+                        targetContent.classList.remove('slds-show');
+                        targetContent.classList.remove('slds-hide');
+
+                        if(selectedControl == targetContent.id) {
+                            targetContent.classList.add("slds-show");
+                        }else {
+                            targetContent.classList.add('slds-hide');
+                        }
+                    }
+                    
+                });
+            }
+        }
     }
 }
