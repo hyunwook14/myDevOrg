@@ -19,3 +19,8 @@ th, td {
 ul, li{
     list-style:none;
 }
+
+.slds-vertical-tabs__content .w550 {
+    /* height: 500px; */
+    width:550px;
+}

@@ -12,6 +12,15 @@
                 onchange={handleFilesChange}
             ></lightning-input>
         </div>
+        <div>
+            <div lwc:if={isData} style="height: 300px;">
+                <lightning-datatable
+                        key-field="id"
+                        data={data}
+                        columns={columns}>
+                </lightning-datatable>
+            </div>
+        </div>
 
     </lightning-modal-body>
     <lightning-modal-footer>

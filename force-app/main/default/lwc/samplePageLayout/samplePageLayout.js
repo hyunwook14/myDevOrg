@@ -2,6 +2,9 @@ import { LightningElement } from 'lwc';
 import dataLoaderModal from 'c/dataLoaderModal';
 import { loadScript } from 'lightning/platformResourceLoader';
 import sheetjs from '@salesforce/resourceUrl/sheetjs';
+import getObjectInfo from '@salesforce/apex/samplePageLayoutController.getObjectInfo';
+import getFieldInfo from '@salesforce/apex/samplePageLayoutController.getFieldInfo';
+import getDatas from '@salesforce/apex/samplePageLayoutController.getDatas';
 
 const events = ["pagehide", "pageshow", "unload", "load"];
 
@@ -21,6 +24,10 @@ const eventLogger = (event) => {
 let XLS = {};
 
 export default class SamplePageLayout extends LightningElement {
+    objectOptions = [];
+    fieldOptions  = [];
+    selectedOptionList = [];
+    data = [];
 
     customLookupInfo = [
         {attribute:'isRequired          ' , isRequired:'false', desc:'필수표시여부, 값: true/false'},
@@ -109,6 +116,81 @@ export default class SamplePageLayout extends LightningElement {
         }
     }
 
+    handleExport(event) {
+        console.log('Export Btn Click');
+
+        if(this.data.length>0) {
+            let wb = XLSX.utils.book_new();
+            let header = this.selectedOptionList.slice();
+
+            // this.selectedOptionList.forEach(selectedOption=>{
+            //     header.push(selectedOption.value)
+            // }); 
+
+            let ws = XLSX.utils.json_to_sheet(this.data , {header:header});
+
+            let title = 'test';
+            //엑셀파일정보
+            wb.Props = {
+                Title: title,
+                Subject: "Excel",
+                Author: "Master",
+                CreatedDate: new Date()
+            };
+            
+            /* 방법1 [s]*/
+            //엑셀 첫번째 시트네임
+            wb.SheetNames.push(title);
+
+            //시트에 데이터를 연결
+            wb.Sheets[title] = ws;
+            /* 방법1 [e]*/
+
+            /* 방법2 [s]*/
+            //XLSX.utils.book_append_sheet(wb, ws, "Data");
+            /* 방법2 [e]*/
+
+            XLSX.writeFile(wb, "SheetForceExport4.xlsx");
+        }
+    }
+
+    handleSearchClick(event) {
+        console.log('clicked search btn');
+        let sObjectApi = this.template.querySelector('.sObjectInfo').value;
+
+        if(sObjectApi) {
+            getDatas({
+                objectApi: sObjectApi
+                ,fieldInfoList: this.selectedOptionList
+            }).then(result=>{
+                console.log(result);
+                this.data = result.getDataList;
+            }).catch(error=>{
+                console.error(error);
+            });
+
+        }
+    }
+
+    handleObjectChange(event) {
+        console.log(event.currentTarget.value);
+        console.log(event.target.value);
+        let objectApi = event.target.value;
+        getFieldInfo({objectApi:objectApi}).then(result=>{
+            let fieldOptionList = result.fieldOptionList.slice();
+            this.fieldOptions = fieldOptionList;
+            let selectedOptionList = [];
+            fieldOptionList.forEach(fieldOption=>{
+                selectedOptionList.push(
+                    fieldOption.value
+                );
+            })
+            this.selectedOptionList = selectedOptionList;
+        }).catch(error=>{   
+            console.error(error);
+        })
+    }
+
     _setOnPopStateHandler() {
         console.log('_setOnPopStateHandler');
         window.onpopstate = (ev) => {
@@ -145,6 +227,13 @@ export default class SamplePageLayout extends LightningElement {
             console.log(event);
             //let now_mouseup = widnow.event.srcElement
             //console.log(now_mouseup.className);
+        });
+
+        getObjectInfo({}).then(result=>{
+            console.log(result);
+            this.objectOptions = result.objectInfoOptionList;
+        }).catch(error=>{
+            console.error(error);
         });
     }
 

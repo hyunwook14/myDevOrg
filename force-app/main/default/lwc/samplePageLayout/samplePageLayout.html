@@ -105,15 +105,46 @@
               <div class="slds-text-longform">
 
                 <h3 class="slds-text-heading_medium">Data Loader by Modal</h3>
-                <button class="slds-button slds-button_neutral" onclick={handleModalClick}>Show Modal</button>
+                <button class="slds-button slds-button_neutral" onclick={handleModalClick}>Show Import Modal</button>
 
                 <div>
-                    <lightning-input 
+                    <!-- <lightning-input 
                         type="file"
                         label="Attachment"
                         accept={acceptedFormats}
                         onchange={handleFilesChange}
-                    ></lightning-input>
+                    ></lightning-input> -->
+
+                    <lightning-combobox
+                        class="sObjectInfo"
+                        name=""
+                        label="Object 명"
+                        placeholder="Select Object"
+                        options={objectOptions}
+                        onchange={handleObjectChange} ></lightning-combobox>
+
+                    <lightning-dual-listbox 
+                        class="w550"
+                        name=""
+                        label="field 정보"
+                        source-label="Available"
+                        selected-label="Selected"
+                        field-level-help=""
+                        options={fieldOptions}
+                        value={selectedOptionList}
+                    ></lightning-dual-listbox>
+
+                    <div>
+                        <button class="slds-button slds-button_neutral" onclick={handleExport}> Export </button>
+                        <button class="slds-button slds-button_neutral" onclick={handleSearchClick}> 검색 </button>
+                    </div>
+                    <div>
+                        <lightning-datatable
+                            key-field="id"
+                            data={data}
+                            columns={fieldOptions}>
+                        </lightning-datatable>
+                    </div>
                 </div>
               </div>
             </div>
