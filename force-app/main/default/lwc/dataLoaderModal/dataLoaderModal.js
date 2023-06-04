@@ -95,7 +95,17 @@ export default class DataLoaderModal extends LightningModal  {
       }
     
     renderedCallback() {
+        let overlay = document.body.querySelector('lightning-overlay-container');
+        console.log(overlay);
+
+        let overlay2 = document.documentElement.querySelector('[aria-description="modalInfo"]');
+        console.log(overlay2);
+        
         if(!this.isInit) {
+
+
+            //document.documentElement.querySelector('')            
+
             // Promise.all([
             //     loadScript(this, sheetjs)
             //     //loadStyle(this, D3 + '/style.css')

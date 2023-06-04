@@ -1,29 +1,36 @@
 <template>
-    <lightning-modal-header label="My Modal Heading"></lightning-modal-header>
-    <lightning-modal-body> 
-        
+    <div class="default">
         <div>
-            {version}
-
-            <lightning-input 
-                type="file"
-                label="Attachment"
-                accept={acceptedFormats}
-                onchange={handleFilesChange}
-            ></lightning-input>
+            <c-minimize-modal class="minizie"></c-minimize-modal>
         </div>
-        <div>
-            <div lwc:if={isData} style="height: 300px;">
-                <lightning-datatable
-                        key-field="id"
-                        data={data}
-                        columns={columns}>
-                </lightning-datatable>
+        <lightning-modal-header label="My Modal Heading">
+            
+        </lightning-modal-header>
+        <lightning-modal-body> 
+            
+            <div>
+                {version}
+    
+                <lightning-input 
+                    type="file"
+                    label="Attachment"
+                    accept={acceptedFormats}
+                    onchange={handleFilesChange}
+                ></lightning-input>
             </div>
-        </div>
-
-    </lightning-modal-body>
-    <lightning-modal-footer>
-        <lightning-button label="OK" onclick={handleOkay}></lightning-button>
-    </lightning-modal-footer>
+            <div>
+                <div lwc:if={isData} style="height: 300px;">
+                    <lightning-datatable
+                            key-field="id"
+                            data={data}
+                            columns={columns}>
+                    </lightning-datatable>
+                </div>
+            </div>
+    
+        </lightning-modal-body>
+        <lightning-modal-footer>
+            <lightning-button label="OK" onclick={handleOkay}></lightning-button>
+        </lightning-modal-footer>
+    </div>
 </template>
